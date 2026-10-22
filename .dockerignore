@@ -1,0 +1,38 @@
+# El build context de Docker NO hereda .gitignore — hay que listar todo.
+
+node_modules
+.next
+.git
+.gitignore
+
+# Docs y legacy no hacen falta en la imagen
+docs
+*.md
+
+# Env — nunca al build context. Runtime-only, via docker-compose env_file/environment.
+.env
+.env.*
+!.env.example
+
+# Fixtures / dumps con datos reales o anonimizados
+fixtures
+*.dump
+*.sql
+
+# Editor / OS
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Nota: NO se excluye docker/ — el Dockerfile hace
+# `COPY docker/entrypoint.sh` y eso lee del build context.
+
+# Coverage / build previos
+coverage
+out
+build

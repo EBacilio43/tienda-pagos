@@ -1,0 +1,53 @@
+# Dependencias
+node_modules/
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+build/
+next-env.d.ts
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+
+# Fixtures / dumps con datos reales o anonimizados
+fixtures/*.sql
+*.dump
+
+# Archivos JSON temporales de importación masiva de cuentas
+/libretas/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.pem
+/coverage
+
+# TypeScript
+*.tsbuildinfo
+
+# Vercel (si aplica en algún punto)
+.vercel
+
+# Playwright — artefactos de las corridas E2E. `test-results/` solo aparece
+# cuando algo falla (trace y captura de la prueba en rojo, retain-on-failure);
+# `playwright-report/` es el reporte HTML. Los dos se regeneran, ninguno
+# se versiona.
+/test-results
+/playwright-report
+/blob-report
+/playwright/.cache

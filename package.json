@@ -1,0 +1,63 @@
+{
+  "name": "tienda-pagos",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "detectar-duplicados": "tsx scripts/detectar-clientes-duplicados.ts",
+    "db:seed": "tsx prisma/seed.ts",
+    "verificar-saldos": "tsx scripts/verificar-saldos.ts",
+    "verificar-stock": "tsx scripts/verificar-stock.ts",
+    "podar-logs": "tsx scripts/podar-logs.ts",
+    "test": "vitest run tests/unit",
+    "test:integration": "DATABASE_URL=\"${DATABASE_URL:-postgresql://tienda:tienda@db:5432/tienda_test}\" DIRECT_DATABASE_URL=\"${DIRECT_DATABASE_URL:-postgresql://tienda:tienda@db:5432/tienda_test}\" vitest run tests/integration --no-file-parallelism",
+    "test:e2e": "docker compose --profile e2e run --rm --build e2e",
+    "verificar-preflight": "tsx scripts/verificar-preflight.ts",
+    "validar-cuenta": "tsx scripts/validar-cuenta.ts",
+    "cargar-cuenta": "tsx scripts/cargar-cuenta.ts",
+    "pre-commit": "lint-staged && tsc --noEmit && npm test",
+    "prepare": "git config core.hooksPath .githooks || true"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.7.0",
+    "@node-rs/bcrypt": "^1.10.7",
+    "@prisma/client": "^6.19.3",
+    "@react-pdf/renderer": "^4.5.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "dotenv": "^16.4.7",
+    "lucide-react": "^1.30.0",
+    "next": "15.5.23",
+    "pg": "^8.13.1",
+    "prisma": "^6.19.3",
+    "react": "^19",
+    "react-dom": "^19",
+    "server-only": "^0.0.1",
+    "shadcn": "^4.16.2",
+    "tailwind-merge": "^3.6.0",
+    "tsx": "^4.19.2",
+    "tw-animate-css": "^1.4.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22.10.2",
+    "@types/pg": "^8.11.10",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.23",
+    "lint-staged": "^15.5.2",
+    "tailwindcss": "^4",
+    "typescript": "^5.7.2",
+    "vitest": "^4.1.10"
+  }
+}

@@ -1,0 +1,230 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Fase 9 / ADR-17. Dos ramas a proposito:
+   1) clase .dark -> eleccion explicita del usuario ("oscuro").
+   2) media query -> tema "sistema": el <html> NO lleva clase de tema y el
+      navegador decide en el primer paint, sin JS y sin parpadeo. La
+      exclusion :not(.light) es la que hace que "claro" gane sobre un
+      sistema en oscuro.
+   El servidor no puede resolver "sistema" desde una cookie (no conoce
+   prefers-color-scheme), asi que esto reemplaza a next-themes: sin script
+   inline no hace falta perforar la CSP con nonce de Fase 7 por una
+   preferencia visual. Costo: el bloque oscuro de :root vive dos veces
+   (abajo, en .dark y en la media query) — scripts/verificar-tokens.ts
+   falla si divergen. */
+@custom-variant dark {
+  &:where(.dark, .dark *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not(.light), :root:not(.light) *) {
+      @slot;
+    }
+  }
+}
+
+/* Fase 9 / ADR-17. Un solo origen de color para toda la app.
+   El cromo (marca, superficies, foco) vive en hue 258 con croma <= 0.085;
+   los cinco colores de movimiento (datos del ledger) van en croma >= 0.128.
+   Esa distancia de croma es la que hace que un monto nunca se confunda con
+   un boton. Ver docs/DISENO.md. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* Sin `var(--font-sans)` aqui: con `inline` los tokens de @theme no se
+     emiten como variables CSS, asi que referenciarse entre ellos produce
+     un ciclo invalido y el navegador cae a su serif por defecto. Cada uno
+     lleva su stack completo. */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-heading: var(--font-geist-sans), ui-sans-serif, system-ui,
+    -apple-system, sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  /* Datos del ledger. Exponerlos aqui genera text-venta, bg-venta/10,
+     border-saldo/25, etc. — y con eso las pastillas funcionan en claro y
+     oscuro sin una sola clase `dark:`. */
+  --color-venta: var(--venta);
+  --color-enganche: var(--enganche);
+  --color-abono: var(--abono);
+  --color-devolucion: var(--devolucion);
+  --color-saldo: var(--saldo);
+  --color-exito: var(--exito);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  color-scheme: light;
+
+  --background: oklch(0.992 0.003 258);
+  --foreground: oklch(0.232 0.014 258);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.232 0.014 258);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.232 0.014 258);
+  --primary: oklch(0.347 0.073 258); /* = navy700 del PDF (Fase 5) */
+  --primary-foreground: oklch(0.985 0.004 258);
+  --secondary: oklch(0.955 0.008 258);
+  --secondary-foreground: oklch(0.3 0.03 258);
+  --muted: oklch(0.972 0.005 258); /* = paperMuted del PDF */
+  --muted-foreground: oklch(0.495 0.024 258);
+  /* --accent tiene que separarse de --muted: cuando eran iguales, todos
+     los `hover:bg-accent` del sidebar y del dashboard eran invisibles. */
+  --accent: oklch(0.94 0.014 258);
+  --accent-foreground: oklch(0.3 0.035 258);
+  --destructive: oklch(0.505 0.192 27);
+  --border: oklch(0.913 0.012 258); /* = line del PDF */
+  --input: oklch(0.893 0.016 258);
+  --ring: oklch(0.55 0.075 258);
+  --radius: 0.625rem;
+
+  /* Cromo del sidebar: navy solido, la misma barra que encabeza el PDF. */
+  --sidebar: oklch(0.259 0.052 258); /* = navy900 del PDF */
+  --sidebar-foreground: oklch(0.865 0.014 258);
+  --sidebar-primary: oklch(0.42 0.075 258);
+  --sidebar-primary-foreground: oklch(0.98 0.004 258);
+  --sidebar-accent: oklch(0.322 0.045 258);
+  --sidebar-accent-foreground: oklch(0.96 0.006 258);
+  --sidebar-border: oklch(0.36 0.04 258);
+  --sidebar-ring: oklch(0.62 0.07 258);
+
+  /* DATOS: los cinco tipos de movimiento de docs/DOMINIO.md. Son tinta,
+     nunca superficie. --exito es feedback de una operacion, no un dato del
+     ledger: hoy comparte el verde de --abono a proposito, pero si uno
+     cambia el otro no debe seguirlo. */
+  --venta: oklch(0.48 0.19 262);
+  --enganche: oklch(0.48 0.205 303);
+  --abono: oklch(0.48 0.128 150);
+  --devolucion: oklch(0.5 0.135 45);
+  --saldo: oklch(0.505 0.192 27);
+  --exito: oklch(0.48 0.128 150);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --background: oklch(0.205 0.018 258);
+  --foreground: oklch(0.945 0.006 258);
+  --card: oklch(0.248 0.02 258);
+  --card-foreground: oklch(0.945 0.006 258);
+  --popover: oklch(0.258 0.02 258);
+  --popover-foreground: oklch(0.945 0.006 258);
+  --primary: oklch(0.7 0.085 258);
+  --primary-foreground: oklch(0.2 0.02 258);
+  --secondary: oklch(0.288 0.022 258);
+  --secondary-foreground: oklch(0.945 0.006 258);
+  --muted: oklch(0.278 0.02 258);
+  --muted-foreground: oklch(0.718 0.024 258);
+  --accent: oklch(0.318 0.028 258);
+  --accent-foreground: oklch(0.96 0.006 258);
+  --destructive: oklch(0.7 0.16 27);
+  --border: oklch(0.88 0.02 258 / 14%);
+  --input: oklch(0.88 0.02 258 / 20%);
+  --ring: oklch(0.62 0.07 258);
+
+  --sidebar: oklch(0.232 0.022 258);
+  --sidebar-foreground: oklch(0.88 0.012 258);
+  --sidebar-primary: oklch(0.4 0.07 258);
+  --sidebar-primary-foreground: oklch(0.975 0.005 258);
+  --sidebar-accent: oklch(0.3 0.028 258);
+  --sidebar-accent-foreground: oklch(0.96 0.006 258);
+  --sidebar-border: oklch(0.88 0.02 258 / 12%);
+  --sidebar-ring: oklch(0.62 0.07 258);
+
+  /* Los mismos cinco, aclarados. Un `text-green-600` literal daria ~2.3:1
+     sobre este fondo — por eso cada color de dato existe dos veces. */
+  --venta: oklch(0.72 0.135 262);
+  --enganche: oklch(0.725 0.16 303);
+  --abono: oklch(0.725 0.16 150);
+  --devolucion: oklch(0.75 0.145 45);
+  --saldo: oklch(0.715 0.15 27);
+  --exito: oklch(0.725 0.16 150);
+}
+
+/* Tema "sistema": mismo bloque que .dark de arriba, condicionado por el
+   navegador en vez de por una clase. Si estos dos bloques divergen,
+   scripts/verificar-tokens.ts falla — es la unica duplicacion real del
+   sistema de tokens y se compensa con ese chequeo mecanico. */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not(.dark) {
+    color-scheme: dark;
+
+    --background: oklch(0.205 0.018 258);
+    --foreground: oklch(0.945 0.006 258);
+    --card: oklch(0.248 0.02 258);
+    --card-foreground: oklch(0.945 0.006 258);
+    --popover: oklch(0.258 0.02 258);
+    --popover-foreground: oklch(0.945 0.006 258);
+    --primary: oklch(0.7 0.085 258);
+    --primary-foreground: oklch(0.2 0.02 258);
+    --secondary: oklch(0.288 0.022 258);
+    --secondary-foreground: oklch(0.945 0.006 258);
+    --muted: oklch(0.278 0.02 258);
+    --muted-foreground: oklch(0.718 0.024 258);
+    --accent: oklch(0.318 0.028 258);
+    --accent-foreground: oklch(0.96 0.006 258);
+    --destructive: oklch(0.7 0.16 27);
+    --border: oklch(0.88 0.02 258 / 14%);
+    --input: oklch(0.88 0.02 258 / 20%);
+    --ring: oklch(0.62 0.07 258);
+
+    --sidebar: oklch(0.232 0.022 258);
+    --sidebar-foreground: oklch(0.88 0.012 258);
+    --sidebar-primary: oklch(0.4 0.07 258);
+    --sidebar-primary-foreground: oklch(0.975 0.005 258);
+    --sidebar-accent: oklch(0.3 0.028 258);
+    --sidebar-accent-foreground: oklch(0.96 0.006 258);
+    --sidebar-border: oklch(0.88 0.02 258 / 12%);
+    --sidebar-ring: oklch(0.62 0.07 258);
+
+    --venta: oklch(0.72 0.135 262);
+    --enganche: oklch(0.725 0.16 303);
+    --abono: oklch(0.725 0.16 150);
+    --devolucion: oklch(0.75 0.145 45);
+    --saldo: oklch(0.715 0.15 27);
+    --exito: oklch(0.725 0.16 150);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+  html {
+    @apply font-sans;
+  }
+}

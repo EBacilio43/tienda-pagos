@@ -1,0 +1,31 @@
+﻿# Corredor de los flujos E2E ().
+#
+# Imagen propia y no la de desarrollo: los navegadores de Playwright pesan
+# cientos de MB y sus dependencias de sistema (fuentes, libnss, libasound…)
+# no tienen por qué estar en la imagen con la que se trabaja todos los días.
+# Va bajo el perfil `e2e` de docker-compose.yml, así que `docker compose up`
+# normal ni la construye.
+#
+# La versión de la imagen DEBE coincidir con la de @playwright/test en
+# package.json: Playwright verifica que el navegador sea el que su
+# protocolo espera y aborta si no lo es. Al subir la dependencia, este tag
+# sube con ella.
+FROM mcr.microsoft.com/playwright:v1.63.0-noble
+
+WORKDIR /app
+
+# openssl por el mismo motivo que en las otras dos imágenes: sin él, Prisma
+# no detecta la versión de libssl y cae a un engine que puede no ser el
+# correcto. `global-setup.ts` habla con Postgres directo.
+RUN apt-get update && apt-get install -y --no-install-recommends openssl \
+  && rm -rf /var/lib/apt/lists/*
+
+# npm ci antes de copiar el resto: la capa se reusa mientras el lockfile no
+# cambie, que es lo que hace tolerable reconstruir esta imagen.
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY prisma ./prisma
+RUN npx prisma generate
+
+CMD ["npx", "playwright", "test"]

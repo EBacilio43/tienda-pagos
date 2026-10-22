@@ -1,0 +1,43 @@
+﻿#!/usr/bin/env sh
+# . Pre-commit hook: lint-staged, typecheck y pruebas unitarias rápidas.
+#
+# Vive en .githooks/ (versionado). Se activa con:
+#     git config core.hooksPath .githooks
+# (o automáticamente mediante npm run prepare).
+#
+# Escape para emergencias:
+#     SALTAR_PRE_COMMIT=1 git commit -m "..."
+set -e
+
+if [ "${SALTAR_PRE_COMMIT:-0}" = "1" ]; then
+  printf '\033[33m⚠ Pre-commit hook saltado (SALTAR_PRE_COMMIT=1).\033[0m\n'
+  exit 0
+fi
+
+printf '\033[1m🔍 Ejecutando Quality Gates de pre-commit...\033[0m\n'
+
+# 1. Lint exclusivo sobre archivos TypeScript en el staging area
+printf '  ▶ lint-staged (eslint)...\n'
+npx lint-staged
+
+# 2. Typecheck estricto de TypeScript en todo el proyecto
+printf '  ▶ tsc --noEmit...\n'
+if docker compose ps --status running --services 2>/dev/null | grep -q '^app$'; then
+  docker compose exec -T app npx tsc --noEmit
+elif docker compose -p tienda-pagos ps --status running --services 2>/dev/null | grep -q '^app$'; then
+  docker compose -p tienda-pagos exec -T app npx tsc --noEmit
+else
+  npx tsc --noEmit
+fi
+
+# 3. Pruebas unitarias puras (< 2s, sin BD ni red)
+printf '  ▶ pruebas unitarias (vitest run tests/unit)...\n'
+if docker compose ps --status running --services 2>/dev/null | grep -q '^app$'; then
+  docker compose exec -T app npm test
+elif docker compose -p tienda-pagos ps --status running --services 2>/dev/null | grep -q '^app$'; then
+  docker compose -p tienda-pagos exec -T app npm test
+else
+  npm test
+fi
+
+printf '\033[32m✓ Quality Gates superados con éxito.\033[0m\n'

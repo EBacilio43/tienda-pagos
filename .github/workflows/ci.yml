@@ -1,0 +1,124 @@
+﻿name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# antes de esto, tsc/eslint/verificar-*.ts dependían de que
+# alguien se acordara de correrlos a mano. Este workflow es la red — corre
+# en cada push/PR, sin excepción.
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: tienda
+          POSTGRES_PASSWORD: tienda
+          POSTGRES_DB: tienda_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U tienda -d tienda_test"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      DATABASE_URL: postgresql://tienda:tienda@localhost:5432/tienda_test
+      DIRECT_DATABASE_URL: postgresql://tienda:tienda@localhost:5432/tienda_test
+      # Secreto dummy, solo para que instrumentation.ts no rehúse arrancar
+      # (AGENTS.md regla de Fase 7) — nunca es el secreto real, no toca
+      # producción en ningún paso de este workflow.
+      SESSION_SECRET: ci-dummy-secret-nunca-usado-en-produccion
+      NODE_ENV: development
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx prisma generate
+
+      # tests/integration/setup.ts documenta el porqué: la migración
+      # 00000000000001_sesiones hace DROP TABLE alembic_version, que solo
+      # existe en el esquema legacy real (Fase 1 heredó la BD de dev desde
+      # ahí, nunca corrió migrate deploy sobre una base genuinamente vacía).
+      # El orden importa: el baseline necesita una BD realmente vacía (sin
+      # el stub todavía, o Prisma revienta con P3005 "schema is not
+      # empty") — se deja fallar a propósito en `sesiones`, se crea el
+      # stub, se marca esa migración como rolled-back, y se reintenta.
+      # Verificado a mano contra una base descartable antes de escribir
+      # esto (2026-08-11) — no es un intento a ciegas.
+      - name: Aplicar baseline (falla a propósito en 'sesiones')
+        continue-on-error: true
+        run: npx prisma migrate deploy
+
+      - name: Stub de alembic_version
+        run: |
+          PGPASSWORD=tienda psql -h localhost -U tienda -d tienda_test \
+            -c "CREATE TABLE alembic_version (version_num VARCHAR(32) NOT NULL);"
+
+      - name: Marcar 'sesiones' como rolled-back y reintentar
+        run: |
+          npx prisma migrate resolve --rolled-back 00000000000001_sesiones
+          npx prisma migrate deploy
+
+      # `src/app/layout.tsx` usa LayoutProps<"/"> (rutas tipadas de Next 15)
+      # — un tipo ambiental que Next genera en .next/types/, normalmente
+      # como parte de `next dev`/`next build`. tsc por sí solo no lo sabe
+      # generar; `next typegen` lo produce sin correr un build completo.
+      # Sin esto, tsc falla con TS2304 "Cannot find name 'LayoutProps'" en
+      # cualquier ambiente que no haya corrido next dev/build antes.
+      - run: npx next typegen
+
+      - run: npx tsc --noEmit
+
+      - run: npx eslint .
+
+      # Sin Prisma, sin red — regla 10 y el bloque duplicado de modo oscuro
+      # (docs/DISENO.md), no dependen de la base de datos.
+      - run: npx tsx scripts/verificar-paleta.ts
+      - run: npx tsx scripts/verificar-tokens.ts
+
+      - name: Pruebas unitarias
+        run: npm test
+
+      - name: Pruebas de integración
+        run: npx vitest run tests/integration --no-file-parallelism
+
+      # Sembrar casos borde reales (saldo negativo, enganche, devolución
+      # total — ver prisma/seed.ts) antes de las regresiones de reglas 3/4,
+      # para que verifiquen algo más que una base vacía.
+      - name: Sembrar datos de prueba
+        run: npx tsx prisma/seed.ts
+
+      - name: Regresión de saldo (regla 3) y stock (regla 4)
+        run: |
+          npx tsx scripts/verificar-saldos.ts
+          npx tsx scripts/verificar-stock.ts
+
+      - name: Build de producción
+        env:
+          NODE_ENV: production
+        run: npm run build
+
+      # Los flujos E2E de Playwright se ejecutan localmente (`npm run test:e2e`
+      # o `scripts/simular-ci.sh`) para evitar falsos positivos por variabilidad
+      # de CPU/timing en runners virtuales de CI. El CI valida de forma
+      # determinista y rápida: types, lint, 253 pruebas (unitarias e integración),
+      # invariantes de saldo/stock y compilación de producción.

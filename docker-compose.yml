@@ -1,0 +1,107 @@
+﻿services:
+  db:
+    # PostgreSQL 17
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tienda
+      POSTGRES_PASSWORD: tienda
+      POSTGRES_DB: tienda
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tienda -d tienda"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local
+    environment:
+      # Fijas al servicio `db` de aquí arriba. `environment:`
+      # gana sobre cualquier .env que Next/Prisma carguen desde el bind
+      # mount, así que esto es lo que de verdad usa el contenedor.
+      DATABASE_URL: postgresql://tienda:tienda@db:5432/tienda
+      DIRECT_DATABASE_URL: postgresql://tienda:tienda@db:5432/tienda
+      NODE_ENV: development
+    volumes:
+      - .:/app
+      # Anónimos — obligatorio en Windows: sin ellos el bind mount de
+      # arriba pisa los binarios nativos (Prisma engines, etc.)
+      # compilados en Linux dentro de la imagen, y Prisma no arranca.
+      - /app/node_modules
+      - /app/.next
+
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    profiles: ["tools"]
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+
+  # ── Flujos E2E () ──────────────────────────────────
+  # Perfil aparte: `docker compose up` de todos los días no los levanta.
+  # Se corren con `npm run test:e2e`.
+
+  # La app apuntando a `tienda_test`, NO a `tienda`. Es la misma separación
+  # que protege `tests/integration/setup.ts`.
+  app-e2e:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    profiles: ["e2e"]
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env.local
+    environment:
+      DATABASE_URL: postgresql://tienda:tienda@db:5432/tienda_test
+      DIRECT_DATABASE_URL: postgresql://tienda:tienda@db:5432/tienda_test
+      NODE_ENV: development
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - next-e2e:/app/.next
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 20s
+
+  e2e:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.e2e
+    profiles: ["e2e"]
+    depends_on:
+      app-e2e:
+        condition: service_healthy
+    environment:
+      # global-setup.ts trunca la base antes de sembrar, y repite el
+      # guardia de nombre: si esto apuntara a `tienda`, revienta antes de
+      # tocar una fila.
+      DATABASE_URL: postgresql://tienda:tienda@db:5432/tienda_test
+      E2E_BASE_URL: http://app-e2e:3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  pgdata:
+  next-e2e:
