@@ -1,4 +1,4 @@
-﻿-- Fuente única de verdad del saldo (AGENTS.md regla 3, docs/DOMINIO.md).
+-- Fuente única de verdad del saldo (AGENTS.md regla 3, docs/DOMINIO.md).
 -- saldo = Σ ventas.monto_total − Σ pagos.monto − Σ devoluciones.monto_credito
 --         − Σ ventas.enganche (solo donde tiene_enganche = true)
 --

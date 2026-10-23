@@ -1,4 +1,4 @@
-﻿# src/server/actions — Server Actions
+# src/server/actions — Server Actions
 
 Un archivo por entidad (`ventas.ts`, `pagos.ts`, `devoluciones.ts`,
 `catalogo.ts`, `clientes.ts`, `usuarios.ts`, `sesiones.ts`, `actividad.ts`,

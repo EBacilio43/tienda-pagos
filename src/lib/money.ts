@@ -1,4 +1,4 @@
-﻿import type { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 // AGENTS.md regla 1: Decimal en el servidor, string en la frontera RSC,
 // nunca Number()/parseFloat() sobre un campo monetario — ni siquiera para

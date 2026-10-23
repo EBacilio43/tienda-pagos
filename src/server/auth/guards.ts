@@ -1,4 +1,4 @@
-﻿import "server-only";
+import "server-only";
 import { redirect } from "next/navigation";
 import type { Usuario } from "@prisma/client";
 import { leerSesion } from "./session";

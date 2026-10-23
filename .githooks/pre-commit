@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env sh
+#!/usr/bin/env sh
 # . Pre-commit hook: lint-staged, typecheck y pruebas unitarias rápidas.
 #
 # Vive en .githooks/ (versionado). Se activa con:

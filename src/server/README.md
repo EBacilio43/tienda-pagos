@@ -1,4 +1,4 @@
-﻿# src/server — código server-only
+# src/server — código server-only
 
 Todo lo que hay aquí puede leer secretos, hablar con la base de datos, o
 correr lógica que no debe llegar al navegador. **Nunca se importa desde un

@@ -1,4 +1,4 @@
-﻿import type { Prisma, PrismaClient } from "@prisma/client";
+import type { Prisma, PrismaClient } from "@prisma/client";
 import { prisma } from "@/server/db/prisma";
 import { registrarAuditoria } from "@/server/audit/registrar";
 import { puedeAjustarStock, ErrorPermiso } from "@/lib/permisos";

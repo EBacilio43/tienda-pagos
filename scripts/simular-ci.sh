@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env sh
+#!/usr/bin/env sh
 # Simula .github/workflows/ci.yml localmente, ANTES de pushear.
 # . Corre desde el host (Git Bash en Windows), orquestando Docker.
 #

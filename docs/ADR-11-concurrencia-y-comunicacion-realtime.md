@@ -1,4 +1,4 @@
-﻿# ADR-11 — Control de Concurrencia, Prevención de Colisiones en Abonos Simultáneos y Estrategia de Comunicación en Tiempo Real
+# ADR-11 — Control de Concurrencia, Prevención de Colisiones en Abonos Simultáneos y Estrategia de Comunicación en Tiempo Real
 
 ## 1. Metadatos
 

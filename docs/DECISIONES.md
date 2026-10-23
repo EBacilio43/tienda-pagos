@@ -1,4 +1,4 @@
-﻿# DECISIONES — ADRs
+# DECISIONES — ADRs
 
 Decisiones tomadas antes de empezar la migración. No se re-litigan sin una
 razón nueva y documentada; si algo cambia, se añade un ADR nuevo, no se edita

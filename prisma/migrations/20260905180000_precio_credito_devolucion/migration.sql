@@ -1,4 +1,4 @@
-﻿-- Una devolución no siempre se acredita al precio al que se vendió la pieza:
+-- Una devolución no siempre se acredita al precio al que se vendió la pieza:
 -- llega con desgaste de uso y se le reconoce menos. Hasta ahora el crédito
 -- era, por construcción, Σ (cantidad × precio_unitario) de los artículos
 -- devueltos, así que ese caso no se podía capturar.

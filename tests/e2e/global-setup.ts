@@ -1,4 +1,4 @@
-﻿import { hash } from "@node-rs/bcrypt";
+import { hash } from "@node-rs/bcrypt";
 import { PrismaClient } from "@prisma/client";
 
 // El estado conocido sobre el que corren los flujos. Se recrea entero en

@@ -1,4 +1,4 @@
-﻿// AGENTS.md regla 2: columnas DATE cruzan la frontera RSC como string
+// AGENTS.md regla 2: columnas DATE cruzan la frontera RSC como string
 // YYYY-MM-DD, nunca como Date. Prisma las mapea a medianoche UTC — leer con
 // getUTC* siempre, nunca toLocaleDateString directo (día anterior en MX).
 

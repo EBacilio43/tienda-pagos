@@ -1,4 +1,4 @@
-﻿import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vitest";
 import { esquemaVenta, esquemaArticuloVenta } from "@/lib/schemas/venta";
 import { esquemaDevolucion, esquemaArticuloDevolucion } from "@/lib/schemas/devolucion";
 

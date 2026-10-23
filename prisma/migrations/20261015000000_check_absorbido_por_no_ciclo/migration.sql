@@ -1,4 +1,4 @@
-﻿-- Cierra el ciclo trivial de longitud 1 en absorción de clientes
+-- Cierra el ciclo trivial de longitud 1 en absorción de clientes
 -- (un cliente no puede estar absorbido por sí mismo).
 --
 -- IS DISTINCT FROM es null-safe: si absorbido_por es NULL, evalúa a TRUE.

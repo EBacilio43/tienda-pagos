@@ -1,4 +1,4 @@
-﻿# src/server/pdf — estado de cuenta en PDF
+# src/server/pdf — estado de cuenta en PDF
 
 Dos archivos: `estado-cuenta.tsx` (el documento, con `@react-pdf/renderer`
 — componentes tipo React pero que renderizan a PDF, no a HTML) y

@@ -1,4 +1,4 @@
-﻿import type { Rol } from "@/types/dominio";
+import type { Rol } from "@/types/dominio";
 
 // Fase 6: el gate real vive en cada servicio (AGENTS.md regla 7) — un
 // Server Action con su ID descubierto en el bundle de producción y

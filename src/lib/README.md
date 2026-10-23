@@ -1,4 +1,4 @@
-﻿# src/lib — utilidades isomórficas
+# src/lib — utilidades isomórficas
 
 Todo lo de acá corre igual en servidor y en cliente — nada aquí importa
 `@/server/*` (esa frontera existe para que un secreto no termine en el

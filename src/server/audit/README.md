@@ -1,4 +1,4 @@
-﻿# src/server/audit — el INSERT de auditoría compartido
+# src/server/audit — el INSERT de auditoría compartido
 
 Un archivo, `registrar.ts`, una función: `registrarAuditoria(db, params)`.
 

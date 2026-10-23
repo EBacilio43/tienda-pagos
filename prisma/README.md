@@ -1,4 +1,4 @@
-﻿# prisma — esquema, migraciones, seed
+# prisma — esquema, migraciones, seed
 
 ```
 schema.prisma     modelos + @@map/@map a los nombres reales en español

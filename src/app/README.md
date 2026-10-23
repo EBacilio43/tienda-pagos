@@ -1,4 +1,4 @@
-﻿# src/app — rutas
+# src/app — rutas
 
 App Router de Next.js 15. Tres route groups, cada uno con su propio
 layout y su propia forma de autorizar:

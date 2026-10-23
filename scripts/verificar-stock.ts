@@ -1,4 +1,4 @@
-﻿/**
+/**
  * AGENTS.md regla 4: catalogo.stock == SUM(movimientos_stock.delta) para
  * cada artículo, siempre. Se encontró una violación real en Fase 3 (seed.ts
  * ponía stock directo sin movimiento) — este script existe para que no

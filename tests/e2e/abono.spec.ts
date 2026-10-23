@@ -1,4 +1,4 @@
-﻿import { test, expect } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { CLIENTE_E2E } from "./global-setup";
 import { entrar, visible } from "./apoyo";
 

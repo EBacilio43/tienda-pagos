@@ -1,4 +1,4 @@
-﻿import type { Prisma, PrismaClient } from "@prisma/client";
+import type { Prisma, PrismaClient } from "@prisma/client";
 
 type ClienteTransaccional = PrismaClient | Prisma.TransactionClient;
 

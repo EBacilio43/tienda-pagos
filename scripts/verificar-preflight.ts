@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Precondiciones de datos de las migraciones PENDIENTES, contra la base a
  * la que se va a desplegar. Solo lectura.
  *

@@ -1,4 +1,4 @@
-﻿import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 // AGENTS.md regla 2: ventas.fecha/pagos.fecha/devoluciones.fecha son DATE,
 // Prisma los mapea a medianoche UTC. Métodos UTC siempre — toLocaleDateString

@@ -1,4 +1,4 @@
-﻿import { z } from "zod";
+import { z } from "zod";
 import { REGEX_MONTO } from "@/lib/money";
 import {
   campoTextoRequerido,

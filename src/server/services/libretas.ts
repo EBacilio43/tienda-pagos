@@ -1,4 +1,4 @@
-﻿// Sin `import "server-only"`, como el resto de server/services/*: los
+// Sin `import "server-only"`, como el resto de server/services/*: los
 // scripts de scripts/ importan estos servicios fuera del bundler de Next y
 // ese paquete revienta en Node plano (ver el comentario de server/db/prisma.ts).
 // La barrera contra que esto llegue al cliente es la regla ESLint

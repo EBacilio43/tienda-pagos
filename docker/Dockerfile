@@ -1,4 +1,4 @@
-﻿# Imagen de producción — multi-stage, standalone. node:22-bookworm-slim,
+# Imagen de producción — multi-stage, standalone. node:22-bookworm-slim,
 # NO Alpine: musl obliga a binaryTargets especiales para Prisma y a cazar
 # el build correcto de @node-rs/bcrypt (ver docs/PLAN.md, riesgo #7).
 FROM node:22-bookworm-slim AS base

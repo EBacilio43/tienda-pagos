@@ -1,4 +1,4 @@
-﻿import { ErrorPermiso } from "@/lib/permisos";
+import { ErrorPermiso } from "@/lib/permisos";
 import { ErrorDominio } from "@/lib/errores";
 import { logError } from "@/server/log";
 

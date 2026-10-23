@@ -1,4 +1,4 @@
-﻿/**
+/**
  * sesiones_log se escribe en cada intento de login,
  * auditoria en cada mutación — ninguna de las dos se poda nunca. Este
  * script aplica una política de retención explícita en vez de dejarlas

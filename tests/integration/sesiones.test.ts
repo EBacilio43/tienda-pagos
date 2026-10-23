@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, beforeEach, afterAll, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterAll, vi } from "vitest";
 
 const cookieStoreVal = new Map<string, string>();
 vi.mock("server-only", () => ({}));

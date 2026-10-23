@@ -1,4 +1,4 @@
-﻿// Hook oficial de arranque de Next.js — corre una sola vez, antes de que
+// Hook oficial de arranque de Next.js — corre una sola vez, antes de que
 // el servidor acepte requests. Fase 7 / AGENTS.md: la app debe rehusarse
 // a arrancar si falta SESSION_SECRET, no fallar en silencio en el primer
 // login (ver server/auth/session.ts, que lo usa como pepper HMAC).

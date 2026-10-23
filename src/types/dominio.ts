@@ -1,4 +1,4 @@
-﻿// DTOs y tipos compartidos entre servidor y cliente. Los campos monetarios
+// DTOs y tipos compartidos entre servidor y cliente. Los campos monetarios
 // cruzan la frontera RSC como `string`, nunca `number` (AGENTS.md regla 1).
 
 import type { CambioAuditoria } from "@/lib/auditoria";

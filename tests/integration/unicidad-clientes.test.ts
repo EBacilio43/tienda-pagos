@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, beforeEach, afterAll } from "vitest";
+import { describe, it, expect, beforeEach, afterAll } from "vitest";
 import { prisma, limpiarBaseDePrueba } from "./setup";
 import { crearCliente, actualizarCliente } from "@/server/services/clientes";
 import { ErrorDominio } from "@/lib/errores";

@@ -1,4 +1,4 @@
-﻿# src/server/services — lógica de negocio
+# src/server/services — lógica de negocio
 
 Donde vive el negocio de verdad. Cada función mutante sigue el mismo
 patrón: recibe `actor` como primer parámetro, valida el permiso con

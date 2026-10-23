@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env sh
+#!/usr/bin/env sh
 # . Corre la simulación del CI antes de dejar completar un push.
 #
 # Vive en .githooks/ (versionado) y no en .git/hooks/ (que no se versiona

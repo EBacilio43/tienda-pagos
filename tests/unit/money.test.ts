@@ -1,4 +1,4 @@
-﻿import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vitest";
 import {
   REGEX_MONTO,
   REGEX_MONTO_POSITIVO,

@@ -1,4 +1,4 @@
-﻿import { z } from "zod";
+import { z } from "zod";
 import { REGEX_MONTO, REGEX_MONTO_POSITIVO } from "@/lib/money";
 
 /**

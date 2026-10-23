@@ -1,4 +1,4 @@
-﻿import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vitest";
 import { claveArticulo } from "@/lib/articulos";
 
 // esta es la identidad que decide si dos líneas de artículo

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useActionState, useState, useRef, useEffect } from "react";
 import type { ResultadoAccion } from "@/server/actions/ventas";

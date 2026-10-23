@@ -1,4 +1,4 @@
-﻿import { defineConfig } from "vitest/config";
+import { defineConfig } from "vitest/config";
 import path from "node:path";
 
 // Mismo alias que tsconfig.json (`@/*` -> `./src/*`) resuelto a mano en vez

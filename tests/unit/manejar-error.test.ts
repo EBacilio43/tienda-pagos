@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { mensajeDeError } from "@/server/actions/manejar-error";
 import { ErrorDominio } from "@/lib/errores";
 import { ErrorPermiso } from "@/lib/permisos";

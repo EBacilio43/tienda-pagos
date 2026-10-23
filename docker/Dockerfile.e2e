@@ -1,4 +1,4 @@
-﻿# Corredor de los flujos E2E ().
+# Corredor de los flujos E2E ().
 #
 # Imagen propia y no la de desarrollo: los navegadores de Playwright pesan
 # cientos de MB y sus dependencias de sistema (fuentes, libnss, libasound…)

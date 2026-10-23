@@ -1,4 +1,4 @@
-﻿# src/components — UI
+# src/components — UI
 
 Dos capas, con una regla de ubicación fija (Fase 9 / ADR-17):
 
