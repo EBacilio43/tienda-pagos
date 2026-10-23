@@ -42,14 +42,30 @@ Todo se ejecuta dentro de Docker (`docker compose exec app <comando>`):
 
 ## Flujo de trabajo y ramas
 
-- **`main`:** Código listo para producción o despliegue.
-- **`develop`:** Rama de integración principal. Todo trabajo nuevo parte de aquí:
+- **`main`:** Versión pública principal, estable y lista para producción/despliegue.
+- **`develop`:** Rama de integración para desarrollo activo, recepción de actualizaciones y staging.
   ```bash
   git checkout develop
   git pull
   git checkout -b <tipo>/<slug> develop
   ```
-- Al terminar: verificar lint, tipos y pruebas unitarias dentro de Docker.
+- **Ramas de trabajo (`<tipo>/<slug>`):**
+  - Ejemplos: `feat/modo-offline`, `fix/validacion-telefono`, `docs/guia-docker`.
+  - Antes de fusionar o hacer push, ejecutar obligatoriamente los checks dentro del entorno Docker:
+    ```bash
+    docker compose exec app npm run lint
+    docker compose exec app npx tsc --noEmit
+    docker compose exec app npm test
+    ```
+
+---
+
+## Invariante de Privacidad y Código Abierto
+
+Este repositorio es público. Cualquier contribución o actualización debe respetar estrictamente:
+1. **Cero datos reales o privados (PII):** Ningún commit debe contener nombres de personas reales, números telefónicos verdaderos, credenciales, tokens, identificadores de servicios de nube o datos de operaciones comerciales reales.
+2. **Uso de configuración y nombres genéricos:** La identidad del sistema se mantiene mediante `APP_CONFIG` en `src/lib/config.ts`.
+3. **Datos de prueba sintéticos:** Todo seed o prueba debe usar dominios `@ejemplo.com`, números de teléfono ficticios (`555-XXX-XXXX`) y clientes sintéticos (`@seed.invalid`).
 
 ---
 
